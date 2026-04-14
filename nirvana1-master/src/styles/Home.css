@@ -1,0 +1,101 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  /* Page Styling */
+  body {
+    background-color: #e8e8d8;
+    color: #2d4850;
+    min-height: 100vh;
+  }
+  
+  /* Navbar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: transparent;
+  }
+  
+  .logo {
+    height: 60px;
+  }
+  
+  /* Navigation Buttons */
+  .nav-buttons {
+    display: flex;
+    gap: 10px;
+    background-color: #a9a0c8;
+    padding: 10px 20px;
+    border-radius: 30px;
+  }
+  
+  .nav-item {
+    padding: 6px 12px;
+    background-color: #A3C8A4;
+    color: #000;
+    text-decoration: none;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .nav-item:hover {
+    background-color: #9b91b8;
+  }
+  
+  .register-btn {
+    background-color: #2d2d2d;
+    color: #fff;
+  }
+  
+  /* Main Content */
+  .main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 80px 100px;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  
+  .main-text {
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  .main-text h1 {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1.4;
+    color: #2d4850;
+    margin-bottom: 30px;
+  }
+  
+  .cta-button {
+    background-color: #a9a0c8;
+    padding: 15px 30px;
+    border-radius: 25px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #2d2d2d;
+    font-weight: 500;
+    transition: background 0.3s ease;
+  }
+  
+  .cta-button:hover {
+    background-color: #9b91b8;
+  }
+  
+  /* Penguin Image */
+  .main-image img {
+    max-width: 250px;
+    height: auto;
+  }
+  
