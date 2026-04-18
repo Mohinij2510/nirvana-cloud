@@ -33,12 +33,15 @@ export default function Chat() {
 
   return (
     <div className="chat-container">
-      
+
       {/* Sidebar */}
       <aside className="chat-sidebar">
         <img src="/logo.png" alt="Nirvana Logo" className="logo" />
         <nav>
           <ul>
+            <li className="nav-link">
+              <Link to="/">🏠 Home</Link>
+            </li>
             <li>🗑️ Clear conversations</li>
             <li>📄 Updates & FAQ</li>
 

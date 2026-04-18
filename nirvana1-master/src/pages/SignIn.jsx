@@ -1,25 +1,41 @@
 import React from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 import "../styles/SignIn.css";
 
 export default function SignIn() {
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const email = e.target[1].value;
-    const password = e.target[2].value;
+    const email = e.target[0].value;
+    const password = e.target[1].value;
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/signin`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
-    });
-      console.log("Response status:", res.status); // Add this
+      const res = await fetch(`http://localhost:8000/api/signin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      console.log("Response status:", res.status);
       const data = await res.json();
       if (res.ok) {
+        // Store user data in localStorage
+        localStorage.setItem("user", JSON.stringify({
+          email: data.email,
+          name: data.profile_name,
+          role: data.role
+        }));
+        
         alert(`Welcome, ${data.profile_name}`);
+        
+        // Redirect based on role
+        if (data.role === "patient") {
+          navigate("/");
+        } else {
+          navigate("/Dashboard");
+        }
       } else {
         alert(data.message);
       }
@@ -37,7 +53,6 @@ export default function SignIn() {
         <p>Use your email or other service to continue with us</p>
 
         <form onSubmit={handleSubmit}>
-          <input type="text" placeholder="Enter your profile name" required />
           <input type="email" placeholder="Enter your Email" required />
           <input type="password" placeholder="Enter your Password" required />
           <button type="submit" className="signin-btn">Sign In</button>
@@ -47,10 +62,10 @@ export default function SignIn() {
           <span>OR</span>
         </div>
 
-        <button className="google-btn">
-          <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20" alt="Google Icon" />
-          Continue with Google
-        </button>
+        <div style={{ marginTop: "1rem", textAlign: "center" }}>
+          <span>Don't have an account? </span>
+          <Link to="/Register" style={{ color: "#4A90E2", textDecoration: "none", fontWeight: "bold" }}>Sign Up</Link>
+        </div>
       </div>
 
       <div className="signin-image-wrapper">

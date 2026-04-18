@@ -1,21 +1,29 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "../styles/Dashboard.css";
 
 function TherapistDashboard() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [patients, setPatients] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [showPatientsList, setShowPatientsList] = useState(false);
   const [allPatients, setAllPatients] = useState([]);
-  const [newAppointment, setNewAppointment] = useState({
-    name: '',
-    date: '',
-    time: '',
-    description: '',
-    email: '',
-    contact: ''
-  });
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      if (parsedUser.role !== "therapist") {
+        navigate("/PatientDashboard");
+      }
+      setUser(parsedUser);
+    } else {
+      navigate("/SignIn");
+    }
+  }, [navigate]);
 
   const currentYear = selectedDate.getFullYear();
   const currentMonth = selectedDate.getMonth();
@@ -59,21 +67,6 @@ function TherapistDashboard() {
 
   const appointmentDates = appointments.map((a) => formatDateOnly(a.date));
 
-  const addAppointment = () => {
-    if (!newAppointment.name || !newAppointment.date || !newAppointment.time) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    axios.post('http://localhost:8000/api/appointments/add', newAppointment)
-      .then(() => {
-        alert("Appointment added!");
-        setNewAppointment({ name: '', date: '', time: '', description: '', email: '', contact: '' });
-        fetchAppointmentsForMonth();
-      })
-      .catch(err => console.error("Add error:", err));
-  };
-
   const updateAppointmentTime = (name, newTime) => {
     const dateStr = formatDateOnly(selectedDate);
 
@@ -111,6 +104,7 @@ function TherapistDashboard() {
   return (
     <div className="dashboard-wrapper">
       <div className="sidebar-buttons">
+        <button className="sidebar-button" onClick={() => navigate("/")}>🏠 Home</button>
         <button className="sidebar-button" onClick={clearCalendar}>🗓 Clear Calendar</button>
         <button
           className="sidebar-button"
@@ -120,24 +114,16 @@ function TherapistDashboard() {
           }}>
           👥 My Patients
         </button>
-        <button className="sidebar-button">🚪 Log out</button>
+        <button className="sidebar-button" onClick={() => {
+          localStorage.removeItem("user");
+          navigate("/SignIn");
+        }}>🚪 Log out</button>
       </div>
 
       <main className="main-content">
         <div className="header">
           <img src="/penguin.png" alt="Penguin" className="penguin" />
-          <p>Hey <strong>“Therapist Name”</strong>, which patient are you tending to today?</p>
-        </div>
-
-        <div className="appointment-form">
-          <h4>Add Appointment</h4>
-          <input type="text" placeholder="Patient Name" value={newAppointment.name} onChange={(e) => setNewAppointment({ ...newAppointment, name: e.target.value })} />
-          <input type="date" value={newAppointment.date} onChange={(e) => setNewAppointment({ ...newAppointment, date: e.target.value })} />
-          <input type="time" value={newAppointment.time} onChange={(e) => setNewAppointment({ ...newAppointment, time: e.target.value })} />
-          <input type="text" placeholder="Description" value={newAppointment.description} onChange={(e) => setNewAppointment({ ...newAppointment, description: e.target.value })} />
-          <input type="email" placeholder="Email" value={newAppointment.email} onChange={(e) => setNewAppointment({ ...newAppointment, email: e.target.value })} />
-          <input type="tel" placeholder="Contact Number" value={newAppointment.contact} onChange={(e) => setNewAppointment({ ...newAppointment, contact: e.target.value })} />
-          <button className="slot" onClick={addAppointment}>Submit</button>
+          <p>Hey <strong>{user?.name || "Therapist"}</strong>, which patient are you tending to today?</p>
         </div>
 
         <div className="appointment-card">
